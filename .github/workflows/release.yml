@@ -101,8 +101,8 @@ jobs:
                   set -euo pipefail
                   curl -fsSL -o DeveloperIDG2CA.cer https://www.apple.com/certificateauthority/DeveloperIDG2CA.cer
                   curl -fsSL -o DeveloperIDCA.cer https://www.apple.com/certificateauthority/DeveloperIDCA.cer
-                  security import DeveloperIDG2CA.cer -k signing_temp
-                  security import DeveloperIDCA.cer -k signing_temp
+                  security import DeveloperIDG2CA.cer -k signing_temp.keychain
+                  security import DeveloperIDCA.cer -k signing_temp.keychain
                   rm DeveloperIDG2CA.cer DeveloperIDCA.cer
 
             - name: Sign macOS binary
