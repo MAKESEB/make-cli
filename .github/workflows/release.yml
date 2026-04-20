@@ -126,10 +126,10 @@ jobs:
 
                   codesign --remove-signature "${BINARY_NAME}" || true
 
-                  IDENTITY="$(security find-identity -v -p codesigning signing_temp \
+                  IDENTITY="$(security find-identity -v -p codesigning \
                       | awk -F'"' '/Developer ID Application/ { print $2; exit }')"
                   if [ -z "${IDENTITY}" ]; then
-                      echo "::error::No 'Developer ID Application' identity found in the imported certificate"
+                      echo "::error::No valid 'Developer ID Application' identity found"
                       exit 1
                   fi
                   echo "Signing identity: ${IDENTITY}"
