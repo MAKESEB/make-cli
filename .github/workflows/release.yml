@@ -99,10 +99,21 @@ jobs:
               shell: bash
               run: |
                   set -euo pipefail
+
                   curl -fsSL -o DeveloperIDG2CA.cer https://www.apple.com/certificateauthority/DeveloperIDG2CA.cer
                   curl -fsSL -o DeveloperIDCA.cer https://www.apple.com/certificateauthority/DeveloperIDCA.cer
-                  security import DeveloperIDG2CA.cer -k signing_temp.keychain
-                  security import DeveloperIDCA.cer -k signing_temp.keychain
+
+                  for cert_file in DeveloperIDG2CA.cer DeveloperIDCA.cer; do
+                      if ! output=$(security import "${cert_file}" -k signing_temp.keychain 2>&1); then
+                          if echo "${output}" | grep -q "already exists"; then
+                              echo "${cert_file} already present in signing_temp.keychain"
+                          else
+                              echo "${output}"
+                              exit 1
+                          fi
+                      fi
+                  done
+
                   rm DeveloperIDG2CA.cer DeveloperIDCA.cer
 
             - name: Sign macOS binary
